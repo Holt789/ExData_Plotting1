@@ -1,0 +1,43 @@
+# Read the rows we are interested in from the household_power_consumption.txt 
+powerConSub <- read.table("household_power_consumption.txt",skip=grep("1/2/2007", readLines("household_power_consumption.txt")), nrows=2879, sep=";", na.strings = "?")
+colnames(powerConSub) <- c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
+
+# set to 4 multi plot
+par(mfrow = c(2,2))
+
+
+# Plot Global Active Power Graph
+plot(powerConSub$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="", xaxt="n")
+axis(1, at=1:1, labels=c("Thu"))
+axis(1, at=1440:1440, labels=c("Fri"))
+axis(1, at=2879:2879, labels=c("SAT"))
+
+
+# Plot Voltage Graph
+plot(powerConSub$Voltage,  ylab="Voltage", xlab="datetime", xaxt="n", type="l")
+
+axis(1, at=1:1, labels=c("Thu"))
+axis(1, at=1440:1440, labels=c("Fri"))
+axis(1, at=2879:2879, labels=c("Sat"))
+
+# Plot Energy sub metering
+plot(powerConSub$Sub_metering_1,  ylab="Energy sub metering", xlab="", xaxt="n", type="n")
+points(powerConSub$Sub_metering_1, type="l")
+points(powerConSub$Sub_metering_2, type="l", col="red")
+points(powerConSub$Sub_metering_3, type="l", col="blue")
+
+axis(1, at=1:1, labels=c("Thu"))
+axis(1, at=1440:1440, labels=c("FRI"))
+axis(1, at=2879:2879, labels=c("Sat"))
+legend("topright", pch=NA, lwd=1, col = c("black","blue", "red"), legend = c("Sub_meeting_1", "Sub_meeting_2","Sub_meeting_3"),lty=c(1,1,1))
+
+# Plot Global Relative Power
+# get the code for the Global Reactive Power
+plot(powerConSub$Global_reactive_power,  ylab="Global_reactive_power", xlab="datetime", xaxt="n", type="l")
+
+axis(1, at=1:1, labels=c("Thu"))
+axis(1, at=1440:1440, labels=c("Fri"))
+axis(1, at=2879:2879, labels=c("Sat"))
+
+dev.copy(png, file="plot4.png")
+dev.off()
